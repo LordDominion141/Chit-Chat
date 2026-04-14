@@ -1,5 +1,5 @@
-//Import tools/dependencies.
-const express = require('express');
+//Import tools/dependencies
+import express from 'express';
 const router = express.Router();
 
 
@@ -26,4 +26,4 @@ router.get('/logout', logoutRes)
 
 
 //Export router
-module.exports = router;
+export default router;

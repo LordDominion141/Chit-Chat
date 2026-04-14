@@ -1,11 +1,16 @@
 //Import tools/dependencies.
-const express = require('express');
-const dotenv = require('dotenv')
-const authRoutes = require('./routes/auth.route.js')
-const messageRoutes = require('./routes/message.route.js')
-
+import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import authRoutes from './routes/auth.route.js';
+import messageRoutes from './routes/message.route.js';
 //Initialize our server.
 const app = express();
+
+
+const __dirname = path.resolve();
+
 
 //Get or port no. from .env file.
 dotenv.config();
@@ -18,6 +23,14 @@ const port = process.env.PORT || 3000;
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
 
+
+//Make ready for deployment.
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    app.use((req, res)=>{
+        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+    });
+}
 
 //Listen for request
 app.listen(port, () =>{ console.log('Chit-chat server running now...')});
