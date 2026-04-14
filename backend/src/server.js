@@ -14,7 +14,7 @@ const __dirname = path.resolve();
 
 //Get or port no. from .env file.
 dotenv.config();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 //Whatever this does. 🤣🤣🤣 Just kidding
 //Initialize our API URL, and use our requests from the requests file.
@@ -34,4 +34,4 @@ if(process.env.NODE_ENV === "production"){
 
 
 //Listen for request
-app.listen(port, () =>{ console.log('Chit-chat server running now...')});
+app.listen(PORT);
