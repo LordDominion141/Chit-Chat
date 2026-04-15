@@ -34,4 +34,4 @@ if(process.env.NODE_ENV === "production"){
 
 
 //Listen for request
-app.listen(PORT);
+app.listen(PORT, ()=>{console.log("Server running on port "+PORT)});
