@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
+import { connectDB } from './lib/db.js'
 //Initialize our server.
 const app = express();
 
@@ -20,6 +21,8 @@ const PORT = process.env.PORT || 3000;
 //Initialize our API URL, and use our requests from the requests file.
 
 
+app.use(express.json())
+
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
 
@@ -34,4 +37,8 @@ if(process.env.NODE_ENV === "production"){
 
 
 //Listen for request
-app.listen(PORT, ()=>{console.log("Server running on port "+PORT)});
+app.listen(PORT, ()=>{
+    console.log("Server running on port "+PORT);
+    connectDB();
+    
+});

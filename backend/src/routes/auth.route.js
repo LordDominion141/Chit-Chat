@@ -1,28 +1,17 @@
 //Import tools/dependencies
 import express from 'express';
+import authControl from '../controllers/auth.controller.js'
+
+
 const router = express.Router();
 
 
-
-//Defining functions
-const signupRes = (req, res)=>{
-    res.send("Sign up page");
-}
-const loginRes = (req, res)=>{
-    res.send("Log in page");
-}
-const logoutRes = (req, res)=>{
-    res.send("Log out page");
-}
-
-
-
 //Mounting routes and using their corresponding functions. 
-router.get('/signup', signupRes)
+router.post('/signup', authControl.signupRes)
 
-router.get('/login', loginRes)
+router.get('/login', authControl.loginRes)
 
-router.get('/logout', logoutRes)
+router.get('/logout', authControl.logoutRes)
 
 
 //Export router
