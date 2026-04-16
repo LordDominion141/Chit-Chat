@@ -36,15 +36,15 @@ export const signupRes = async (req, res)=>{
     });
     
     if(newUser){
-        generateToken(newUser._id, res)
         await newUser.save();
-        res.status(201).json({
+        generateToken(newUser._id, res);
+        return res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
             profilePic: newUser.profilePic
         })
-        console.log(newUser)
+        console.log("New user created")
     }else{
         res.status(400).json({message:"Invalid user data"})
     }
@@ -52,9 +52,17 @@ export const signupRes = async (req, res)=>{
     
     
     } catch (error) {
+        if (error?.code === 11000) {
+            return res.status(409).json({
+                
+        message: "User already exists." 
+                
+            });
+}
+
         console.log("Error in sign up", error);
-        res.status(500).json({
-            message:"Something went wrong "
+        return res.status(500).json({
+             message:"Something went wrong "
         })
     }
 }

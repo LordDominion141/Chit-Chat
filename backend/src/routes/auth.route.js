@@ -9,9 +9,9 @@ const router = express.Router();
 //Mounting routes and using their corresponding functions. 
 router.post('/signup', authControl.signupRes)
 
-router.get('/login', authControl.loginRes)
+router.post('/login', authControl.loginRes)
 
-router.get('/logout', authControl.logoutRes)
+router.post('/logout', authControl.logoutRes)
 
 
 //Export router
