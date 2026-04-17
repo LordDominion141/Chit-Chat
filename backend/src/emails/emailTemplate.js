@@ -1,6 +1,7 @@
 export function createWelcomeEmailTemplate(name, clientUrl) {
     return `
 
+
     <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
