@@ -27,7 +27,9 @@ app.use(cookieParser())
 
 app.use((req, res, next) => {
     console.log(`Incoming Request: ${req.method} ${req.url}`);
-    console.log("Cookies attached:", req.cookies);
+    if (ENV.NODE_ENV !== "production") {
+        console.log("Cookies attached:", Object.keys(req.cookies ?? {}));
+    }
     next();
 });
 
