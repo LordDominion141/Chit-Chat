@@ -23,6 +23,8 @@ const PORT = ENV.PORT || 3000;
 
 app.use(express.json())
 
+app.use(cookieParser())
+
 app.use((req, res, next) => {
     console.log(`Incoming Request: ${req.method} ${req.url}`);
     console.log("Cookies attached:", req.cookies);
@@ -30,7 +32,6 @@ app.use((req, res, next) => {
 });
 
 
-app.use(cookieParser())
 
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
