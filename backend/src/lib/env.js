@@ -7,6 +7,9 @@ const requiredEnv = [
   "EMAIL_FROM",
   "EMAIL_FROM_NAME",
   "CLIENT_URL",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET"
 ];
 
 for (const key of requiredEnv) {
