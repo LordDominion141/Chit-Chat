@@ -24,8 +24,9 @@ export const arcjetProtection = async (req, res, next) => {
         }
         next();
     } catch (e) {
-        console.log("Arcjet Protection Error:", e);
-        
-        next();
+        console.error("Arcjet Protection Error:", e);
+        return res.status(503).json({
+            message: "Security service temporarily unavailable"
+        });
     }
 }
