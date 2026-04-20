@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import { connectDB } from './lib/db.js';
-import { ENV } from "./lib/env.js"
+import { ENV } from "./lib/env.js";
+import cookieParser from "cookie-parser"
 //Initialize our server.
 const app = express();
 
@@ -21,6 +22,18 @@ const PORT = ENV.PORT || 3000;
 
 
 app.use(express.json())
+
+app.use(cookieParser())
+
+app.use((req, res, next) => {
+    console.log(`Incoming Request: ${req.method} ${req.url}`);
+    if (ENV.NODE_ENV !== "production") {
+        console.log("Cookies attached:", Object.keys(req.cookies ?? {}));
+    }
+    next();
+});
+
+
 
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
