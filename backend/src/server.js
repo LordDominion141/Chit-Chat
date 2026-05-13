@@ -6,7 +6,8 @@ import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import { connectDB } from './lib/db.js';
 import { ENV } from "./lib/env.js";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
+import cors from "cors";
 //Initialize our server.
 const app = express();
 
@@ -22,7 +23,8 @@ const PORT = ENV.PORT || 3000;
 
 
 app.use(express.json({ limit: '5mb' }));  // Added size limit
-app.use(cookieParser())
+app.use(cors({origin:ENV.CLIENT_URL, credentials: true}));
+app.use(cookieParser());
 
 app.use((req, res, next) => {
     console.log(`Incoming Request: ${req.method} ${req.url}`);
