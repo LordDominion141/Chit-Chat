@@ -55,14 +55,14 @@ if (ENV.NODE_ENV === "production") {
     // FIX: stable absolute path from backend location
     const distPath = path.join(__dirname, "../frontend/dist");
 
-    console.log("Serving frontend from:", distPath);
+console.log("ENV.NODE_ENV =", ENV.NODE_ENV);
+console.log("Serving frontend from:", distPath);
 
-    app.use(express.static(distPath));
+app.use(express.static(distPath));
 
-    // IMPORTANT: React fallback route must be LAST
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(distPath, "index.html"));
-    });
+app.get("*", (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+});
 }
 
 // Start server
