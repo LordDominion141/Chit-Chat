@@ -43,8 +43,8 @@ if (ENV.NODE_ENV === "production") {
 
     app.use(express.static(distPath));
 
-    // IMPORTANT: must be GET, not app.use
-    app.get("*", (req, res) => {
+    // FIX: regex route instead of "*"
+    app.get(/.*/, (req, res) => {
         res.sendFile(path.join(distPath, "index.html"));
     });
 }
