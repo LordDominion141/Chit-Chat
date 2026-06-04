@@ -42,7 +42,9 @@ app.use("/api/messages", messageRoutes);
 // 🚀 Serve frontend in production
 // =======================
 
-const distPath = path.resolve("frontend/dist");
+
+
+const distPath = path.join(__dirname, "../../frontend/dist");
 
 console.log("Serving frontend from:", distPath);
 
