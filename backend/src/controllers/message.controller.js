@@ -128,7 +128,7 @@ const messages = await Message.find({
     { senderId: loggedInUserId },
     { receiverId: loggedInUserId },
   ],
-});
+}).sort({ _id: 1 });
 
 const chatPartnerIds = [
   ...new Set(
