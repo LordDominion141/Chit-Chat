@@ -20,7 +20,7 @@ export function createWelcomeEmailTemplate(name, clientUrl) {
       padding: 20px 0;
     }
     .email-box {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
       background: #ffffff;
       border-radius: 12px;
