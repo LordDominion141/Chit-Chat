@@ -2,6 +2,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
@@ -36,14 +37,20 @@ app.use("/api/messages", messageRoutes);
 // =======================
 // FRONTEND SERVING (PRODUCTION)
 // =======================
-if (ENV.NODE_ENV === "production") {
-    const distPath = path.join(__dirname, "../frontend/dist");
 
-    console.log("Serving frontend from:", distPath);
+// =======================
+// 🚀 Serve frontend in production
+// =======================
 
+const distPath = path.resolve("frontend/dist");
+
+console.log("Serving frontend from:", distPath);
+
+if (!fs.existsSync(distPath)) {
+    console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
+} else {
     app.use(express.static(distPath));
 
-    // FIX: regex route instead of "*"
     app.get(/.*/, (req, res) => {
         res.sendFile(path.join(distPath, "index.html"));
     });
