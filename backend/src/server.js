@@ -2,6 +2,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
@@ -52,13 +53,17 @@ app.use("/api/messages", messageRoutes);
 // 🚀 Serve frontend in production
 // =======================
 if (ENV.NODE_ENV === "production") {
-    const distPath = path.join(__dirname, "../frontend/dist");
+    const distPath = path.resolve("frontend/dist");
 
-    app.use(express.static(distPath));
+    if (fs.existsSync(distPath)) {
+        app.use(express.static(distPath));
 
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(distPath, "index.html"));
-    });
+        app.get("*", (req, res) => {
+            res.sendFile(path.join(distPath, "index.html"));
+        });
+    } else {
+        console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
+    }
 }
 
 // Start server
