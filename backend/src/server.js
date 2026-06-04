@@ -18,6 +18,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+console.log("🔥 SERVER STARTED FILE:", import.meta.url);
+console.log("🔥 NODE_ENV:", ENV.NODE_ENV);
+
 // Port
 const PORT = ENV.PORT || 3000;
 
@@ -52,19 +56,16 @@ app.use("/api/messages", messageRoutes);
 // 🚀 Serve frontend in production
 // =======================
 if (ENV.NODE_ENV === "production") {
-    // FIX: stable absolute path from backend location
     const distPath = path.join(__dirname, "../frontend/dist");
 
-console.log("ENV.NODE_ENV =", ENV.NODE_ENV);
-console.log("Serving frontend from:", distPath);
+    console.log("Serving frontend from:", distPath);
 
-app.use(express.static(distPath));
+    app.use(express.static(distPath));
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
-});
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(distPath, "index.html"));
+    });
 }
-
 // Start server
 const startServer = async () => {
     await connectDB();
