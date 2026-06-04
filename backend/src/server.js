@@ -2,7 +2,6 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
@@ -15,7 +14,7 @@ import cors from "cors";
 // Initialize app
 const app = express();
 
-// ✅ FIX: correct __dirname for ES modules
+// Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -53,17 +52,17 @@ app.use("/api/messages", messageRoutes);
 // 🚀 Serve frontend in production
 // =======================
 if (ENV.NODE_ENV === "production") {
-    const distPath = path.resolve("frontend/dist");
+    // FIX: stable absolute path from backend location
+    const distPath = path.join(__dirname, "../frontend/dist");
 
-    if (fs.existsSync(distPath)) {
-        app.use(express.static(distPath));
+    console.log("Serving frontend from:", distPath);
 
-        app.get("*", (req, res) => {
-            res.sendFile(path.join(distPath, "index.html"));
-        });
-    } else {
-        console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
-    }
+    app.use(express.static(distPath));
+
+    // IMPORTANT: React fallback route must be LAST
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(distPath, "index.html"));
+    });
 }
 
 // Start server
