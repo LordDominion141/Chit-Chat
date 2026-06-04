@@ -42,20 +42,20 @@ app.use("/api/messages", messageRoutes);
 // 🚀 Serve frontend in production
 // =======================
 
+if (ENV.NODE_ENV === "production") {
+    const distPath = path.resolve(process.cwd(), "frontend/dist");
 
+    console.log("Serving frontend from:", distPath);
 
-const distPath = path.join(__dirname, "../../frontend/dist");
+    if (!fs.existsSync(distPath)) {
+        console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
+    } else {
+        app.use(express.static(distPath));
 
-console.log("Serving frontend from:", distPath);
-
-if (!fs.existsSync(distPath)) {
-    console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
-} else {
-    app.use(express.static(distPath));
-
-    app.get(/.*/, (req, res) => {
-        res.sendFile(path.join(distPath, "index.html"));
-    });
+        app.get("*", (req, res) => {
+            res.sendFile(path.join(distPath, "index.html"));
+        });
+    }
 }
 
 // Start server
