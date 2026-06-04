@@ -43,7 +43,7 @@ app.use("/api/messages", messageRoutes);
 // =======================
 
 if (ENV.NODE_ENV === "production") {
-    const distPath = path.resolve(__dirname, "../frontend/dist");
+    const distPath = path.resolve(__dirname, "../dist");
 
     console.log("Serving frontend from:", distPath);
 
