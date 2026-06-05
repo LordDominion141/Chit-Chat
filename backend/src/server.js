@@ -1,8 +1,8 @@
 // Import tools/dependencies
-import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import express from "express"; // Still needed for type definition or specific configs
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
@@ -10,8 +10,10 @@ import { connectDB } from "./lib/db.js";
 import { ENV } from "./lib/env.js";
 
 import cookieParser from "cookie-parser";
+// 👇 IMPORT THE ALREADY EXTRACTED APP AND SERVER COMPONENTS HERE
+import { app, server } from "./lib/socket.js"; 
 
-const app = express();
+// REMOVE: const app = express(); <- Delete or comment out this line!
 
 // FIXED __dirname (required for Render + ES modules)
 const __filename = fileURLToPath(import.meta.url);
@@ -34,24 +36,15 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// =======================
 // FRONTEND SERVING (PRODUCTION)
-// =======================
-
-// =======================
-// 🚀 Serve frontend in production
-// =======================
-
 if (ENV.NODE_ENV === "production") {
     const distPath = path.resolve(__dirname, "../../frontend/dist");
-
     console.log("Serving frontend from:", distPath);
 
     if (!fs.existsSync(distPath)) {
         console.log("❌ FRONTEND DIST NOT FOUND:", distPath);
     } else {
         app.use(express.static(distPath));
-
         app.get(/.*/, (req, res) => {
             res.sendFile(path.join(distPath, "index.html"));
         });
@@ -62,8 +55,9 @@ if (ENV.NODE_ENV === "production") {
 const startServer = async () => {
     await connectDB();
 
-    app.listen(PORT, () => {
-        console.log("Server running on port " + PORT);
+    // 👇 CHANGE THIS FROM app.listen TO server.listen
+    server.listen(PORT, () => {
+        console.log("Server running with Socket.io capabilities on port " + PORT);
     });
 };
 

@@ -72,7 +72,7 @@ export const useChatStore = create((set, get) =>({
     }
   },
 
-  sendMessage: async (messageData) => {
+    sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     const { authUser } = useAuthStore.getState();
 
@@ -85,22 +85,25 @@ export const useChatStore = create((set, get) =>({
       text: messageData.text,
       image: messageData.image,
       createdAt: new Date().toISOString(),
-      isOptimistic: true, // flag to identify optimistic messages (optional)
+      isOptimistic: true,
     };
-    // immidetaly update the ui by adding the message
+    
     set({ messages: [...messages, optimisticMessage] });
 
     try {
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
       set((state) => ({
-  messages: [...state.messages.filter(m => !m.isOptimistic), res.data]
-}));
+        messages: [...state.messages.filter(m => m._id !== tempId), res.data]
+      }));
     } catch (error) {
-      // remove optimistic message on failure
-      set({ messages: messages });
+      // 🔥 OPTIMIZATION: Only remove the specific temporary message that failed
+      set((state) => ({
+        messages: state.messages.filter((m) => m._id !== tempId),
+      }));
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   },
+  
 
   subscribeToMessages: () => {
   const socket = useAuthStore.getState().socket;
@@ -109,19 +112,29 @@ export const useChatStore = create((set, get) =>({
 
   socket.on("newMessage", (newMessage) => {
     const selectedUser = get().selectedUser;
+    const { authUser } = useAuthStore.getState();
 
-    if (!selectedUser) return;
+    if (!selectedUser || !authUser) return;
 
+    // 🔥 FIX: A message is relevant if it belongs to the current open window conversation thread
     const isRelevant =
-      newMessage.senderId.toString() === selectedUser._id.toString();
+      (newMessage.senderId.toString() === selectedUser._id.toString() && newMessage.receiverId.toString() === authUser._id.toString()) ||
+      (newMessage.senderId.toString() === authUser._id.toString() && newMessage.receiverId.toString() === selectedUser._id.toString());
 
     if (!isRelevant) return;
 
-    set((state) => ({
-      messages: [...state.messages, newMessage],
-    }));
+    // Optimistic deduplication step (preventing duplicate UI items on the emitting screen)
+    set((state) => {
+      const exists = state.messages.some(msg => msg._id === newMessage._id);
+      if (exists) return state; 
+      
+      return {
+        messages: [...state.messages, newMessage],
+      };
+    });
   });
 },
+
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
