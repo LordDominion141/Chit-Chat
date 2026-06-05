@@ -116,24 +116,38 @@ export const useChatStore = create((set, get) =>({
 
     if (!selectedUser || !authUser) return;
 
-    // 🔥 FIX: A message is relevant if it belongs to the current open window conversation thread
+    // Verify the message belongs to this conversation window
     const isRelevant =
       (newMessage.senderId.toString() === selectedUser._id.toString() && newMessage.receiverId.toString() === authUser._id.toString()) ||
       (newMessage.senderId.toString() === authUser._id.toString() && newMessage.receiverId.toString() === selectedUser._id.toString());
 
     if (!isRelevant) return;
 
-    // Optimistic deduplication step (preventing duplicate UI items on the emitting screen)
     set((state) => {
-      const exists = state.messages.some(msg => msg._id === newMessage._id);
-      if (exists) return state; 
-      
+      // 1. Strict ID Check (handles standard messages)
+      const exactIdExists = state.messages.some(msg => msg._id === newMessage._id);
+      if (exactIdExists) return state;
+
+      // 2. 🔥 FIX: Optimistic Match Check
+      // If the incoming message is from YOU, check if an optimistic temporary message 
+      // with the exact same text already exists in your state.
+      if (newMessage.senderId.toString() === authUser._id.toString()) {
+        const isOptimisticDuplicate = state.messages.some(
+          (msg) => msg.isOptimistic && msg.text === newMessage.text
+        );
+        
+        // If it matches an optimistic message, let the HTTP request handle replacing it.
+        // Ignore the socket emission on the sending device.
+        if (isOptimisticDuplicate) return state;
+      }
+
       return {
         messages: [...state.messages, newMessage],
       };
     });
   });
 },
+
 
 
   unsubscribeFromMessages: () => {
