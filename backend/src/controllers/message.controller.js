@@ -98,16 +98,11 @@ const newMessage = new Message({
 await newMessage.save();
 
 // Real-time socket update
-const receiverSocketId =
-  getReceiverSocketId(receiverId);
+const receiverSocketIds = getReceiverSocketId(receiverId);
 
-if (receiverSocketId) {
-  io.to(receiverSocketId).emit(
-    "newMessage",
-    newMessage
-  );
+for (const socketId of receiverSocketIds) {
+  io.to(socketId).emit("newMessage", newMessage);
 }
-
 res.status(201).json(newMessage);
 
 } catch (e) {
