@@ -112,10 +112,10 @@ export const useChatStore = create((set, get) =>({
 
     if (!selectedUser) return;
 
-    const isMessageSentFromSelectedUser =
+    const isRelevant =
       newMessage.senderId.toString() === selectedUser._id.toString();
 
-    if (!isMessageSentFromSelectedUser) return;
+    if (!isRelevant) return;
 
     set((state) => ({
       messages: [...state.messages, newMessage],

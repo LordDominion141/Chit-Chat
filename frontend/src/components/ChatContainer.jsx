@@ -45,7 +45,7 @@ function ChatContainer() {
 
             {messages.map((msg) => (
               <div
-                key={msg._id}
+                key={msg._id || msg.createdAt}
                 className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"} w-full`}
               >
                 <div
