@@ -92,7 +92,9 @@ export const useChatStore = create((set, get) =>({
 
     try {
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-      set({ messages: messages.concat(res.data) });
+      set((state) => ({
+  messages: [...state.messages.filter(m => !m.isOptimistic), res.data]
+}));
     } catch (error) {
       // remove optimistic message on failure
       set({ messages: messages });
@@ -101,26 +103,25 @@ export const useChatStore = create((set, get) =>({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser, isSoundEnabled } = get();
+  const socket = useAuthStore.getState().socket;
+
+  socket.off("newMessage");
+
+  socket.on("newMessage", (newMessage) => {
+    const selectedUser = get().selectedUser;
+
     if (!selectedUser) return;
 
-    const socket = useAuthStore.getState().socket;
+    const isMessageSentFromSelectedUser =
+      newMessage.senderId.toString() === selectedUser._id.toString();
 
-    socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+    if (!isMessageSentFromSelectedUser) return;
 
-      const currentMessages = get().messages;
-      set({ messages: [...currentMessages, newMessage] });
-
-      if (isSoundEnabled) {
-        const notificationSound = new Audio("/sounds/notification.mp3");
-
-        notificationSound.currentTime = 0; // reset to start
-        notificationSound.play().catch((e) => console.log("Audio play failed:", e));
-      }
-    });
-  },
+    set((state) => ({
+      messages: [...state.messages, newMessage],
+    }));
+  });
+},
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;

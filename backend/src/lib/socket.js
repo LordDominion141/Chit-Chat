@@ -21,11 +21,12 @@ const userSocketMap = new Map();
 
 // helper: get all sockets for a user
 export function getReceiverSocketId(userId) {
-  return userSocketMap.get(userId) || new Set();
+  return userSocketMap.get(userId.toString()) || new Set();
 }
 
 io.on("connection", (socket) => {
-  const userId = socket.userId;
+  const userId = socket.userId?.toString();
+if (!userId) return;
 
   console.log("A user connected", socket.user.fullName);
 
@@ -42,7 +43,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.user.fullName);
 
-    const sockets = userSocketMap.get(userId);
+    const sockets = userSocketMap.get(userId.toString());
 
     if (sockets) {
       sockets.delete(socket.id);
