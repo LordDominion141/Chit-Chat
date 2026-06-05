@@ -17,7 +17,11 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
-      get().connectSocket();
+
+     setTimeout(() => {
+  get().connectSocket();
+     }, 0);
+
     } catch (error) {
       console.log("Error in authCheck:", error);
       set({ authUser: null });
@@ -87,24 +91,36 @@ export const useAuthStore = create((set, get) => ({
   },
 
   connectSocket: () => {
-    const { authUser } = get();
-    if (!authUser || get().socket?.connected) return;
+  const { authUser } = get();
 
-    const socket = io(BASE_URL, {
-      withCredentials: true, // this ensures cookies are sent with the connection
-    });
+  if (!authUser) return;
 
-    socket.connect();
+  if (get().socket?.connected) return;
 
-    set({ socket });
+  const socket = io(BASE_URL, {
+    withCredentials: true,
+    transports: ["websocket"], // 🔥 important stability fix
+  });
 
-    // listen for online users event
-    socket.on("getOnlineUsers", (userIds) => {
-      set({ onlineUsers: userIds });
-    });
-  },
+  socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+  });
+
+  set({ socket });
+
+  socket.on("getOnlineUsers", (userIds) => {
+    set({ onlineUsers: userIds });
+  });
+},
 
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
-  },
+  const socket = get().socket;
+
+  if (!socket) return;
+
+  socket.off(); // remove all listeners
+  socket.disconnect();
+
+  set({ socket: null });
+},
 }));
