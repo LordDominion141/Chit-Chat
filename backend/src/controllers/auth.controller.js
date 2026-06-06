@@ -38,26 +38,28 @@ export const signupRes = async (req, res)=>{
         password: hashedPassword
     });
     
-    if(newUser){
+        if (newUser) {
         await newUser.save();
         generateToken(newUser._id, res);
-        console.log("New user created")
+        console.log(`[SIGNUP] Database entry created for: ${newUser.email}`);
         
-       void sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL)
+        // Fire the email asynchronously in the background safely without 'void'
+        sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL)
+            .then(() => {
+                console.log(`[MAIL] Async pipeline finished for ${newUser.email}`);
+            })
             .catch((e) => {
-                console.error("Failed to send welcome email", { message: e?.message });
+                console.error("[MAIL ERROR] Background worker execution crashed:", e?.message || e);
             });
     
-        
         return res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
             profilePic: newUser.profilePic
-        })
-        
-    
-    }else{
+        });
+    }
+else{
         res.status(400).json({message:"Invalid user data"})
     }
     
