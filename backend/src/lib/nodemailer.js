@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
 import { ENV } from "./env.js";
 
-// Create the reusable transport configuration using Gmail's SMTP service
+// Create the transport configuration using OAuth2 authentication to bypass Render's SMTP block
 export const mailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: ENV.GMAIL_USER,      // Your personal Gmail address
-    pass: ENV.GMAIL_APP_PASS,  // Your 16-character Google App Password
+    type: "OAuth2",
+    user: ENV.GMAIL_USER,
+    clientId: ENV.GOOGLE_CLIENT_ID,
+    clientSecret: ENV.GOOGLE_CLIENT_SECRET,
+    refreshToken: ENV.GOOGLE_REFRESH_TOKEN,
   },
 });
 
