@@ -32,36 +32,38 @@ export const signupRes = async (req, res)=>{
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
-    const newUser = new User({
-        fullName,
-        email,
-        password: hashedPassword
+    // ... validation and password hashing blocks above remain unchanged
+
+const newUser = new User({
+    fullName,
+    email,
+    password: hashedPassword
+});
+
+if (newUser) {
+    await newUser.save();
+    generateToken(newUser._id, res);
+    console.log(`[SIGNUP] Database entry created for: ${newUser.email}`);
+    
+    // 🛠️ FIX: Explicitly await the execution block so the thread doesn't terminate early
+    try {
+        await sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL);
+        console.log(`[MAIL] Sync pipeline finished for ${newUser.email}`);
+    } catch (mailError) {
+        // We log the error but still let the user create an account 
+        console.error("[MAIL ERROR] Background execution crashed:", mailError?.message || mailError);
+    }
+
+    return res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilePic: newUser.profilePic
     });
-    
-        if (newUser) {
-        await newUser.save();
-        generateToken(newUser._id, res);
-        console.log(`[SIGNUP] Database entry created for: ${newUser.email}`);
-        
-        // Fire the email asynchronously in the background safely without 'void'
-        sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL)
-            .then(() => {
-                console.log(`[MAIL] Async pipeline finished for ${newUser.email}`);
-            })
-            .catch((e) => {
-                console.error("[MAIL ERROR] Background worker execution crashed:", e?.message || e);
-            });
-    
-        return res.status(201).json({
-            _id: newUser._id,
-            fullName: newUser.fullName,
-            email: newUser.email,
-            profilePic: newUser.profilePic
-        });
-    }
-else{
-        res.status(400).json({message:"Invalid user data"})
-    }
+} else {
+    res.status(400).json({message:"Invalid user data"})
+}
+
     
     
     
