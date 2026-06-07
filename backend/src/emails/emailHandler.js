@@ -1,25 +1,21 @@
-import { sendEmailViaNodemailer, sender } from "../lib/nodemailer.js"; 
-import { createWelcomeEmailTemplate } from "../emails/emailTemplate.js";
+import { sendEmailViaGmailAPI, sender } from "../lib/nodemailer.js"; 
+import { createWelcomeEmailTemplate } from "./emailTemplate.js";
 
 export const sendWelcomeEmail = async (email, name, clientUrl) => {
   try {
-    console.log(`[MAIL DEBUG] Constructing template for ${email}`);
-    
     const mailOptions = {
       from: `"${sender.name}" <${sender.email}>`,
       to: email,
       subject: "Welcome to Chit-Chat",
       html: createWelcomeEmailTemplate(name, clientUrl),
-      text: "Hello",
     };
 
-    // Use our new dynamic function
-    const info = await sendEmailViaNodemailer(mailOptions);
-    
-    console.log("Welcome email sent successfully via Gmail", { messageId: info.messageId });
-    return info;
+    console.log(`[MAIL DEBUG] Preparing API payload for: ${email}`);
+    const data = await sendEmailViaGmailAPI(mailOptions);
+    console.log("[MAIL] Welcome email sent successfully via Gmail REST API", { messageId: data.id });
+    return data;
   } catch (error) {
-    console.error("Welcome email execution failed inside handler:", error);
-    throw error; // Let the controller catch it
+    console.error("[MAIL ERROR] Gmail API execution failed inside handler:", error?.message || error);
+    throw error;
   }
 };
