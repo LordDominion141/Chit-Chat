@@ -1,30 +1,49 @@
-import nodemailer from "nodemailer";
+import { google } from "googleapis";
 import { ENV } from "./env.js";
 
-export const sendEmailViaNodemailer = async (mailOptions) => {
-  // Create transporter dynamically on request to avoid frozen pool issues
-  const mailTransporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: ENV.GMAIL_USER,
-      clientId: ENV.GOOGLE_CLIENT_ID,
-      clientSecret: ENV.GOOGLE_CLIENT_SECRET,
-      refreshToken: ENV.GOOGLE_REFRESH_TOKEN,
-    },
-    // Add a strict timeout so it doesn't hang indefinitely
-    connectionTimeout: 10000, 
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+export const sendEmailViaGmailAPI = async (mailOptions) => {
+  const OAuth2 = google.auth.OAuth2;
+  
+  const oauth2Client = new OAuth2(
+    ENV.GOOGLE_CLIENT_ID,
+    ENV.GOOGLE_CLIENT_SECRET,
+    "https://developers.google.com/oauthplayground"
+  );
+
+  oauth2Client.setCredentials({
+    refresh_token: ENV.GOOGLE_REFRESH_TOKEN,
   });
 
-  // Verify connection configuration before attempting to send
-  console.log("[MAIL DEBUG] Verifying OAuth2 connection to Gmail...");
-  await mailTransporter.verify();
-  console.log("[MAIL DEBUG] OAuth2 credentials verified successfully!");
+  const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
-  // Send the email
-  return await mailTransporter.sendMail(mailOptions);
+  // Compile the RFC 2822 raw internet message structure Google expects
+  const emailLines = [
+    `From: ${mailOptions.from}`,
+    `To: ${mailOptions.to}`,
+    `Subject: ${mailOptions.subject}`,
+    "Content-Type: text/html; charset=utf-8",
+    "MIME-Version: 1.0",
+    "",
+    mailOptions.html,
+  ];
+  
+  // Convert standard strings into safe base64 URL-encoded formats
+  const rawEmail = Buffer.from(emailLines.join("\r\n"))
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  console.log("[MAIL DEBUG] Sending via Direct HTTPS Gmail REST API...");
+  
+  const response = await gmail.users.messages.send({
+    userId: "me",
+    requestBody: {
+      raw: rawEmail,
+    },
+  });
+
+  return response.data;
 };
 
 export const sender = {
