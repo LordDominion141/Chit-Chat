@@ -116,7 +116,6 @@ export const useChatStore = create((set, get) =>({
 
     if (!selectedUser || !authUser) return;
 
-
     const isRelevant =
       (newMessage.senderId.toString() === selectedUser._id.toString() && newMessage.receiverId.toString() === authUser._id.toString()) ||
       (newMessage.senderId.toString() === authUser._id.toString() && newMessage.receiverId.toString() === selectedUser._id.toString());
@@ -124,16 +123,21 @@ export const useChatStore = create((set, get) =>({
     if (!isRelevant) return;
 
     set((state) => {
-
+      // 1. Prevent duplicate IDs (the gold standard check)
       const exactIdExists = state.messages.some(msg => msg._id === newMessage._id);
       if (exactIdExists) return state;
 
-
+      // 2. Prevent duplicate optimistic messages
       if (newMessage.senderId.toString() === authUser._id.toString()) {
-        const isOptimisticDuplicate = state.messages.some(
-          (msg) => msg.isOptimistic && msg.text === newMessage.text
-        );
-        
+        const isOptimisticDuplicate = state.messages.some((msg) => {
+          if (!msg.isOptimistic) return false;
+          
+          // Check if it's the same content (text OR image)
+          const textMatch = msg.text === newMessage.text;
+          const imageMatch = msg.image === newMessage.image;
+          
+          return textMatch || imageMatch;
+        });
 
         if (isOptimisticDuplicate) return state;
       }
