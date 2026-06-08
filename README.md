@@ -51,6 +51,11 @@ A modern full-stack real-time messaging platform built with the MERN stack. Chit
 
 ---
 
+
+![Chit-Chat Login Screen](./assets/loginScreenshot.png)
+
+
+
 🏗️ Tech Stack
 
 Frontend
@@ -100,6 +105,11 @@ backend/
 └── socket/
 
 ---
+
+
+![Chit-Chat Chat Screen](./assets/chatPageScreenshot.png)
+
+
 
 ⚙️ Environment Variables
 
