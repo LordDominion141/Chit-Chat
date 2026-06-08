@@ -41,7 +41,7 @@ export const signupRes = async (req, res) => {
             generateToken(newUser._id, res);
             console.log(`[SIGNUP] Database entry created for: ${newUser.email}`);
 
-            // Await execution safely so the Render server instance doesn't close prematurely
+
             try {
                 await sendWelcomeEmail(newUser.email, newUser.fullName, ENV.CLIENT_URL);
                 console.log(`[MAIL] Sync pipeline finished for ${newUser.email}`);

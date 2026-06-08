@@ -3,12 +3,11 @@
 
 
 @property --border-angle {
-    inherits: false;
-    initial-value: 0deg;
-    syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
 }
 
-    
 
 @theme {
   --animate-border: border 4s linear infinite;
@@ -21,28 +20,27 @@
 }
 
 
+
 .input {
-  @apply w-full bg-slate-800/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
+  @apply w-full bg-[#131b2e] border border-[#464555] rounded-xl py-2 pl-10 pr-4 text-[#dae2fd] placeholder-[#c7c4d8]/40 focus:outline-none focus:ring-2 focus:ring-[#c3c0ff] focus:border-transparent transition-all;
 }
 
 .auth-input-icon {
-  @apply absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 size-5;
+  @apply absolute left-3 top-1/2 -translate-y-1/2 text-[#c7c4d8]/60 size-5;
 }
 
 .auth-input-label {
-  @apply block text-sm font-medium text-slate-300 mb-2;
+  @apply block text-sm font-medium text-[#dae2fd] mb-1;
 }
 
 .auth-badge {
-  @apply inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-cyan-500/20 text-cyan-300;
+  @apply inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-[#1c0051] text-[#ddb8ff] border border-[#7c03d3]/30;
 }
 
 .auth-btn {
-  @apply w-full bg-cyan-500 text-white rounded-lg py-2.5 font-medium
-  hover:bg-cyan-600 focus:ring-2 focus:ring-cyan-500;
+  @apply w-full h-11 bg-[#4f46e5] text-white font-semibold rounded-xl flex items-center justify-center shadow-lg active:scale-[0.98] transition-all hover:bg-[#3323cc] focus:ring-2 focus:ring-[#c3c0ff];
 }
 
 .auth-link {
-  @apply px-4 py-2 inline-block bg-cyan-500/10 rounded-lg text-cyan-400
-  hover:text-cyan-500 text-sm transition-colors;
+  @apply text-sm text-[#c3c0ff] hover:underline transition-all;
 }

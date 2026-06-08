@@ -96,7 +96,7 @@ export const useChatStore = create((set, get) =>({
         messages: [...state.messages.filter(m => m._id !== tempId), res.data]
       }));
     } catch (error) {
-      // 🔥 OPTIMIZATION: Only remove the specific temporary message that failed
+
       set((state) => ({
         messages: state.messages.filter((m) => m._id !== tempId),
       }));
@@ -116,7 +116,7 @@ export const useChatStore = create((set, get) =>({
 
     if (!selectedUser || !authUser) return;
 
-    // Verify the message belongs to this conversation window
+
     const isRelevant =
       (newMessage.senderId.toString() === selectedUser._id.toString() && newMessage.receiverId.toString() === authUser._id.toString()) ||
       (newMessage.senderId.toString() === authUser._id.toString() && newMessage.receiverId.toString() === selectedUser._id.toString());
@@ -124,20 +124,17 @@ export const useChatStore = create((set, get) =>({
     if (!isRelevant) return;
 
     set((state) => {
-      // 1. Strict ID Check (handles standard messages)
+
       const exactIdExists = state.messages.some(msg => msg._id === newMessage._id);
       if (exactIdExists) return state;
 
-      // 2. 🔥 FIX: Optimistic Match Check
-      // If the incoming message is from YOU, check if an optimistic temporary message 
-      // with the exact same text already exists in your state.
+
       if (newMessage.senderId.toString() === authUser._id.toString()) {
         const isOptimisticDuplicate = state.messages.some(
           (msg) => msg.isOptimistic && msg.text === newMessage.text
         );
         
-        // If it matches an optimistic message, let the HTTP request handle replacing it.
-        // Ignore the socket emission on the sending device.
+
         if (isOptimisticDuplicate) return state;
       }
 
@@ -150,9 +147,15 @@ export const useChatStore = create((set, get) =>({
 
 
 
-  unsubscribeFromMessages: () => {
-    const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
-  },
+
+unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket; 
+
+
+    if (socket) {
+        socket.off("newMessage");
+        console.log("[SOCKET] Successfully unsubscribed from newMessage events");
+    }
+},
 }));
 
