@@ -1,6 +1,8 @@
 import { google } from "googleapis";
 import { ENV } from "./env.js";
 
+//OMO I JUST HAD TO USE googleapis, nodemailer on render was disturbing my life💥💥💥
+
 export const sendEmailViaGmailAPI = async (mailOptions) => {
   const OAuth2 = google.auth.OAuth2;
   
@@ -16,7 +18,7 @@ export const sendEmailViaGmailAPI = async (mailOptions) => {
 
   const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
-  // Compile the RFC 2822 raw internet message structure Google expects
+
   const emailLines = [
     `From: ${mailOptions.from}`,
     `To: ${mailOptions.to}`,
@@ -27,7 +29,7 @@ export const sendEmailViaGmailAPI = async (mailOptions) => {
     mailOptions.html,
   ];
   
-  // Convert standard strings into safe base64 URL-encoded formats
+  
   const rawEmail = Buffer.from(emailLines.join("\r\n"))
     .toString("base64")
     .replace(/\+/g, "-")

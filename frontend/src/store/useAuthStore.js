@@ -99,7 +99,7 @@ export const useAuthStore = create((set, get) => ({
 
   const socket = io(BASE_URL, {
     withCredentials: true,
-    transports: ["websocket"], // 🔥 important stability fix
+    transports: ["websocket"],
   });
 
   socket.on("connect", () => {
@@ -118,7 +118,7 @@ export const useAuthStore = create((set, get) => ({
 
   if (!socket) return;
 
-  socket.off(); // remove all listeners
+  socket.off();
   socket.disconnect();
 
   set({ socket: null });

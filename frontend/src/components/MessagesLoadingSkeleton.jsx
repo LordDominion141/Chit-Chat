@@ -1,15 +1,29 @@
 function MessagesLoadingSkeleton() {
+  
+  const skeletalWidths = ["w-48", "w-32", "w-64", "w-40", "w-56", "w-36"];
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {[...Array(6)].map((_, index) => (
-        <div
-          key={index}
-          className={`chat ${index % 2 === 0 ? "chat-start" : "chat-end"} animate-pulse`}
-        >
-          <div className={`chat-bubble bg-slate-800 text-white w-32`}></div>
-        </div>
-      ))}
+    <div className="w-full max-w-full space-y-6">
+      {[...Array(6)].map((_, index) => {
+        const isOutgoing = index % 2 !== 0;
+        return (
+          <div
+            key={index}
+            className={`chat ${isOutgoing ? "chat-end" : "chat-start"} animate-pulse w-full`}
+          >
+            <div 
+
+              className={`chat-bubble h-10 rounded-2xl border ${
+                isOutgoing 
+                  ? "bg-[#4f46e5]/40 border-[#4f46e5]/10" 
+                  : "bg-[#131b2e] border-[#464555]/10"
+              } ${skeletalWidths[index] || "w-48"}`}
+            ></div>
+          </div>
+        );
+      })}
     </div>
   );
 }
+
 export default MessagesLoadingSkeleton;

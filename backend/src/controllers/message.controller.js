@@ -46,7 +46,7 @@ const sendMessage = async (req, res) => {
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    // 1. Sanitize text input
+    // 1. Sanitize text input👺
     const normalizedText = typeof text === "string" ? text.trim() : "";
 
     // 2. Validation: Ensure there is actually content to send
@@ -63,7 +63,7 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    // 4. Validation: Verify receiver exists in DB
+    // 4. Validation: Verify receiver exists in DB !!!!
     const receiverExists = await User.exists({ _id: receiverId });
     if (!receiverExists) {
       return res.status(404).json({
@@ -160,3 +160,6 @@ const messageController = {
 };
 
 export default messageController;
+
+
+//Errrorrr!!!!!!
