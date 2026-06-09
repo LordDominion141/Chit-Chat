@@ -16,10 +16,10 @@ const io = new Server(server, {
 
 io.use(socketAuthMiddleware);
 
-// userId -> Set of socketIds
+// Set of socketIds
 const userSocketMap = new Map();
 
-// helper: get all sockets for a user
+// helpe
 export function getReceiverSocketId(userId) {
   return userSocketMap.get(userId.toString()) || new Set();
 }
@@ -30,7 +30,7 @@ if (!userId) return;
 
   console.log("A user connected", socket.user.fullName);
 
-  // initialize set if needed
+  // initialize set
   if (!userSocketMap.has(userId)) {
     userSocketMap.set(userId, new Set());
   }
@@ -57,7 +57,7 @@ if (!userId) return;
   });
 });
 
-// helper for message fan-out (use in newMessage logic)
+// helper for message fan-out
 export function emitToUser(userId, event, payload) {
   const sockets = userSocketMap.get(userId);
 
