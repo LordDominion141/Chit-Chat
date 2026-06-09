@@ -1,5 +1,4 @@
 function MessagesLoadingSkeleton() {
-  
   const skeletalWidths = ["w-48", "w-32", "w-64", "w-40", "w-56", "w-36"];
 
   return (
@@ -11,13 +10,13 @@ function MessagesLoadingSkeleton() {
             key={index}
             className={`chat ${isOutgoing ? "chat-end" : "chat-start"} animate-pulse w-full`}
           >
-            <div 
-
-              className={`chat-bubble h-10 rounded-2xl border ${
-                isOutgoing 
-                  ? "bg-[#4f46e5]/40 border-[#4f46e5]/10" 
-                  : "bg-[#131b2e] border-[#464555]/10"
-              } ${skeletalWidths[index] || "w-48"}`}
+            <div
+              className={`h-10 shadow-md ${skeletalWidths[index] || "w-48"} 
+              ${
+                isOutgoing
+                  ? "bg-[#4f46e5]/40 rounded-2xl rounded-tr-none"
+                  : "bg-[#1e293b]/60 rounded-2xl rounded-tl-none border border-[#464555]/20"
+              }`}
             ></div>
           </div>
         );
