@@ -36,7 +36,6 @@ function ChatContainer() {
     <>
       <ChatHeader />
 
-      {/* MESSAGES AREA */}  
       <div className="flex-1 w-full max-w-full min-w-0 px-3 md:px-6 overflow-y-auto py-4 md:py-8">  
           
         {messages.length > 0 && !isMessagesLoading ? (  
@@ -49,12 +48,11 @@ function ChatContainer() {
                 className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"} w-full`}  
               >  
                 <div  
-
-                  className={`chat-bubble relative max-w-[75%] break-words whitespace-pre-wrap rounded-2xl px-4 py-2.5 shadow-md ${  
-                    msg.senderId === authUser._id  
-                      ? "bg-[#4f46e5] text-white"  
-                      : "bg-[#131b2e] text-[#dae2fd] border border-[#464555]/20"  
-                  }`}  
+                  className={`chat-bubble relative max-w-[75%] break-words whitespace-pre-wrap px-4 py-2.5 shadow-md 
+                  ${msg.senderId === authUser._id 
+                    ? "bg-[#4f46e5] text-white rounded-br-none rounded-2xl" 
+                    : "bg-[#1e293b] text-[#dae2fd] border border-[#464555]/40 rounded-bl-none rounded-2xl"
+                  }`}
                 >  
                   {msg.image && (  
                     <img  
@@ -67,7 +65,7 @@ function ChatContainer() {
                   {msg.text && <p className="break-words leading-relaxed text-[15px]">{msg.text}</p>}  
 
                   <p className={`text-[10px] mt-1 text-right block ${
-                    msg.senderId === authUser._id ? "text-indigo-200/80" : "text-[#c7c4d8]/50"
+                    msg.senderId === authUser._id ? "text-indigo-200/80" : "text-[#c7c4d8]/60"
                   }`}>  
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {  
                       hour: "2-digit",  
