@@ -15,16 +15,13 @@ function ChatContainer() {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     if (!selectedUser) return;
-
-    getMessagesByUserId(selectedUser._id);  
-    subscribeToMessages();  
-
+    getMessagesByUserId(selectedUser._id);
+    subscribeToMessages();
     return () => unsubscribeFromMessages();
   }, [selectedUser, getMessagesByUserId, subscribeToMessages, unsubscribeFromMessages]);
 
@@ -35,58 +32,46 @@ function ChatContainer() {
   return (
     <>
       <ChatHeader />
-
-      <div className="flex-1 w-full max-w-full min-w-0 px-3 md:px-6 overflow-y-auto py-4 md:py-8">  
-          
-        {messages.length > 0 && !isMessagesLoading ? (  
-            
-          <div className="w-full max-w-full space-y-6">  
-
-            {messages.map((msg) => (  
-              <div  
-                key={msg._id || msg.createdAt}  
-                className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"} w-full`}  
-              >  
-                <div  
-                  className={`chat-bubble relative max-w-[75%] break-words whitespace-pre-wrap px-4 py-2.5 shadow-md 
+      <div className="flex-1 px-6 overflow-y-auto py-8">
+        {messages.length > 0 && !isMessagesLoading ? (
+          <div className="max-w-3xl mx-auto space-y-6">
+            {messages.map((msg) => (
+              <div
+                key={msg._id}
+                className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+              >
+                <div
+                  className={`relative min-h-fit shadow-md px-4 py-2.5 rounded-2xl max-w-[75%]
                   ${msg.senderId === authUser._id 
-                    ? "bg-[#4f46e5] text-white rounded-br-none rounded-2xl" 
-                    : "bg-[#1e293b] text-[#dae2fd] border border-[#464555]/40 rounded-bl-none rounded-2xl"
+                    ? "bg-[#4f46e5] text-white rounded-tr-none before:absolute before:-top-0 before:-right-2 before:w-4 before:h-4 before:bg-[#4f46e5] before:[clip-path:polygon(0_0,0%_100%,100%_0%)]" 
+                    : "bg-[#1e293b] text-[#dae2fd] rounded-tl-none border border-[#464555]/40 before:absolute before:-top-0 before:-left-2 before:w-4 before:h-4 before:bg-[#1e293b] before:[clip-path:polygon(100%_0,0%_0%,100%_100%)]"
                   }`}
-                >  
-                  {msg.image && (  
-                    <img  
-                      src={msg.image}  
-                      alt="Shared"  
-                      className="rounded-xl h-48 max-w-full object-cover mb-1"  
-                    />  
-                  )}  
+                >
+                  {msg.image && (
+                    <img src={msg.image} alt="Shared" className="rounded-lg h-48 object-cover mb-1" />
+                  )}
+                  {msg.text && <p className="leading-relaxed text-[15px]">{msg.text}</p>}
+                  <p className={`text-[10px] mt-1 opacity-70 ${
+                    msg.senderId === authUser._id ? "text-indigo-100" : "text-[#c7c4d8]"
+                  }`}>
+                    {new Date(msg.createdAt).toLocaleTimeString(undefined, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+              </div>
+            ))}
+            <div ref={messageEndRef} />
+          </div>
+        ) : isMessagesLoading ? (
+          <MessagesLoadingSkeleton />
+        ) : (
+          <NoChatHistoryPlaceholder name={selectedUser.fullName} />
+        )}
+      </div>
 
-                  {msg.text && <p className="break-words leading-relaxed text-[15px]">{msg.text}</p>}  
-
-                  <p className={`text-[10px] mt-1 text-right block ${
-                    msg.senderId === authUser._id ? "text-indigo-200/80" : "text-[#c7c4d8]/60"
-                  }`}>  
-                    {new Date(msg.createdAt).toLocaleTimeString(undefined, {  
-                      hour: "2-digit",  
-                      minute: "2-digit",  
-                    })}  
-                  </p>  
-                </div>  
-              </div>  
-            ))}  
-
-            <div ref={messageEndRef} />  
-          </div>  
-
-        ) : isMessagesLoading ? (  
-          <MessagesLoadingSkeleton />  
-        ) : (  
-          <NoChatHistoryPlaceholder name={selectedUser.fullName} />  
-        )}  
-      </div>  
-
-      <MessageInput />  
+      <MessageInput />
     </>
   );
 }
