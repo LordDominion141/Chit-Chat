@@ -11,6 +11,7 @@ function ChatContainer() {
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
+  
   useEffect(() => {
     if (!selectedUser) return;
     getMessagesByUserId(selectedUser._id);
@@ -34,8 +35,8 @@ function ChatContainer() {
                 <div
                   className={`relative min-h-fit shadow-md px-4 py-2.5 rounded-2xl max-w-[85%] md:max-w-[75%]
                   ${msg.senderId === authUser._id 
-                    ? "bg-[#4f46e5] text-white rounded-tr-none" 
-                    : "bg-[#1e293b] text-[#dae2fd] rounded-tl-none border border-[#464555]/40"
+                    ? "bg-[#4f46e5] text-white rounded-tr-none before:absolute before:-top-0 before:-right-2 before:w-4 before:h-4 before:bg-[#4f46e5] before:[clip-path:polygon(0_0,0%_100%,100%_0%)]" 
+                    : "bg-[#1e293b] text-[#dae2fd] rounded-tl-none border border-[#464555]/40 before:absolute before:-top-0 before:-left-2 before:w-4 before:h-4 before:bg-[#1e293b] before:[clip-path:polygon(100%_0,0%_0%,100%_100%)]"
                   }`}
                 >
                   {msg.image && <img src={msg.image} alt="Shared" className="rounded-lg h-48 object-cover mb-1" />}
@@ -58,5 +59,6 @@ function ChatContainer() {
     </>
   );
 }
+
 
 export default ChatContainer;
