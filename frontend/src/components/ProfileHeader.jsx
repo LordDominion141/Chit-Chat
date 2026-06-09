@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react";
+import { LogOutIcon, VolumeOffIcon, Volume2Icon, Share2Icon } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 
@@ -11,6 +11,26 @@ function ProfileHeader() {
   const [selectedImg, setSelectedImg] = useState(null);
 
   const fileInputRef = useRef(null);
+
+  const handleInvite = async () => {
+    const shareData = {
+      title: 'Chit-Chat',
+      text: 'Come chat with me on Chit-Chat, the modern real-time messaging app!',
+      url: window.location.origin, 
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        
+        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+        alert("Invite link copied to clipboard!");
+      }
+    } catch (err) {
+      console.log('Error sharing:', err);
+    }
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -27,12 +47,10 @@ function ProfileHeader() {
   };
 
   return (
-
     <div className="p-6 border-b border-[#464555]/30 bg-transparent">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           
-
           <div className="avatar online">
             <button
               className="size-14 rounded-full overflow-hidden relative group border border-[#464555]/40 cursor-pointer"
@@ -57,21 +75,26 @@ function ProfileHeader() {
             />  
           </div>  
 
-
           <div>  
-
             <h3 className="text-[#dae2fd] font-semibold text-base max-w-[150px] md:max-w-[180px] truncate">  
               {authUser.fullName}  
             </h3>  
-
             <p className="text-[#c7c4d8]/60 text-xs mt-0.5">Online</p>  
           </div>  
         </div>  
 
-
-        <div className="flex gap-4 items-center">  
+        <div className="flex gap-2 items-center">  
           
+          {/* Invite Button */}
+          <button  
+            className="text-[#c7c4d8]/60 hover:text-[#ddb8ff] transition-colors cursor-pointer p-1 rounded-md hover:bg-[#ddb8ff]/10"  
+            onClick={handleInvite}  
+            title="Invite Friends"
+          >  
+            <Share2Icon className="size-5" />  
+          </button>
 
+          {/* Logout Button */}
           <button  
             className="text-[#c7c4d8]/60 hover:text-[#c3c0ff] transition-colors cursor-pointer p-1 rounded-md hover:bg-[#4f46e5]/10"  
             onClick={logout}  
@@ -80,12 +103,11 @@ function ProfileHeader() {
             <LogOutIcon className="size-5" />  
           </button>  
 
-
+          {/* Sound Toggle Button */}
           <button  
             className="text-[#c7c4d8]/60 hover:text-[#c3c0ff] transition-colors cursor-pointer p-1 rounded-md hover:bg-[#4f46e5]/10"  
             onClick={() => {  
-              // play click sound before toggling  
-              mouseClickSound.currentTime = 0; // reset to start  
+              mouseClickSound.currentTime = 0; 
               mouseClickSound.play().catch((error) => console.log("Audio play failed:", error));  
               toggleSound();  
             }}  
