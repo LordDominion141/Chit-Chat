@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#9333EA" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Speech Bubble Shape -->
+  <path d="M 250 80 C 120 80 80 150 80 250 C 80 350 150 420 250 420 L 320 480 L 320 400 C 400 400 420 350 420 250 C 420 150 380 80 250 80 Z" fill="url(#logoGrad)" />
+  
+  <!-- Minimalist Connection Nodes -->
+  <circle cx="180" cy="250" r="25" fill="#FFFFFF" opacity="0.9" />
+  <circle cx="250" cy="250" r="25" fill="#FFFFFF" opacity="0.6" />
+  <circle cx="320" cy="250" r="25" fill="#FFFFFF" opacity="0.3" />
+</svg>
