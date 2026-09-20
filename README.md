@@ -12,7 +12,7 @@ The authentication system uses secure HTTP-only cookies to maintain sessions bet
 {% stat value="HTTP" label="Transport" /%}
 {% /columns %}
 
-{% image url="/images/auth-flow.png" alt="Authentication flow" subtext="Figure 01 — Authentication request flow." /%}
+{% image url="https://share.google/G870pOSZVRrFukYpR" alt="Authentication flow" subtext="Figure 01 — Authentication request flow." /%}
 
 {% card title="Request lifecycle" icon="↗" variant="purple" %}
 Every authenticated request passes through the authentication middleware before reaching the protected route.
