@@ -18,4 +18,8 @@ The authentication system uses secure HTTP-only cookies to maintain sessions bet
 Every authenticated request passes through the authentication middleware before reaching the protected route.
 {% /card %}
 
+{% card title="WELCOME TO SHOWSCAPE" icon="👍" variant="purple" %}
+   This is how showscape works. It's not that hard to use.
+{% /card %}
+
 showscape:end -->
