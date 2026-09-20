@@ -19,7 +19,7 @@ Every authenticated request passes through the authentication middleware before 
 {% /card %}
 
 {% card title="WELCOME TO SHOWSCAPE" icon="👍" variant="purple" %}
-   This is how showscape works. It's not that hard to use.
+   This is how showscape works. It's not that hard to use. GOT IT?
 {% /card %}
 
 showscape:end -->
