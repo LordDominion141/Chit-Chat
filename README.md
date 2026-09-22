@@ -22,6 +22,10 @@ Every authenticated request passes through the authentication middleware before 
    This is how showscape works. It's not that hard to use. GOT IT?
 {% /card %}
 
+{ % card title='LORD DOMINION' icon="😂" % }
+  THIS IS MY SAAS SHOWSCAPE.
+{ % /card % }
+
 showscape:end -->
 
 # VIEW CUSTOM README WITH SHOWSCAPE
