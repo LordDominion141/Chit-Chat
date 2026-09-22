@@ -22,9 +22,9 @@ Every authenticated request passes through the authentication middleware before 
    This is how showscape works. It's not that hard to use. GOT IT?
 {% /card %}
 
-{ % card title='LORD DOMINION' icon="😂" % }
+{% card title='LORD DOMINION' icon="😂" variant="purple"%}
   THIS IS MY SAAS SHOWSCAPE.
-{ % /card % }
+{% /card %}
 
 showscape:end -->
 
