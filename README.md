@@ -30,6 +30,8 @@ showscape:end -->
 
 # VIEW CUSTOM README WITH SHOWSCAPE
 
-[![Button Redirect](https://shields.io)](https://showscape.vercel.app)
+<a href="http://showscape.vercel.app/preview?installation_id=160312096&owner=LordDominion141&repo=Chit-Chat" target="_blank">
+  <img src="https://shields.io" alt="Button Redirect">
+</a>
 
 
