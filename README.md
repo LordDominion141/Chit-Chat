@@ -29,7 +29,7 @@ Every authenticated request passes through the authentication middleware before 
 showscape:end -->
 
 # VIEW CUSTOM README WITH SHOWSCAPE
-<a href="http://localhost:3000/preview?installation_id=160312096&owner=LordDominion141&repo=Chit-Chat">
+<a href="http://showscape.vercel.app/preview?installation_id=160312096&owner=LordDominion141&repo=Chit-Chat">
   <img src="https://shields.io" alt="Button Redirect">
 </a>
 
